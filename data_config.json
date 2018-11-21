@@ -1,0 +1,10 @@
+{
+    "min_q_len": 1,
+    "max_q_len": 20,
+    "min_a_len": 2,
+    "max_a_len": 20,
+    "word2index_path": "w2i.pkl",
+    "index2word_path": "i2w.pkl",
+    "processed_path": "data.pkl",
+    "path": "xiaohuangji50w_fenciA.conv"
+}
