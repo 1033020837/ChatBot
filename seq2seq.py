@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.contrib.rnn import LSTMCell, GRUCell, MultiRNNCell
+from tensorflow.contrib.rnn import LSTMCell, GRUCell, MultiRNNCell, LSTMStateTuple
 from tensorflow.contrib.seq2seq import BahdanauAttention, AttentionWrapper,TrainingHelper,GreedyEmbeddingHelper,\
         BasicDecoder
 from tensorflow import layers
@@ -13,7 +13,7 @@ class Seq2Seq(object):
                  embedding_dim, share_embedding,
                  max_decode_step,max_gradient_norm,
                  learning_rate,decay_step,
-                 min_learning_rate,
+                 min_learning_rate,bidirection,
                  mode
                  ):
         self.hidden_size = hidden_size
@@ -29,6 +29,7 @@ class Seq2Seq(object):
         self.learning_rate = learning_rate
         self.decay_step = decay_step
         self.min_learning_rate = min_learning_rate
+        self.bidirection = bidirection
         self.mode = mode
         self.global_step = tf.Variable(0, trainable=False, name='global_step')
         self.build_model()
@@ -111,13 +112,37 @@ class Seq2Seq(object):
             encoder_cell = self.build_encoder_cell(self.hidden_size, self.cell_type, self.layer_size)
             encoder_inputs_embedded = tf.nn.embedding_lookup(self.encoder_embeddings, self.encoder_inputs)
             initial_state = encoder_cell.zero_state(self.batch_size, dtype=tf.float32)
-            encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(
-                cell=encoder_cell,
-                inputs=encoder_inputs_embedded,
-                sequence_length=self.encoder_inputs_length,
-                dtype=tf.float32,
-                initial_state=initial_state,
-                swap_memory=True)
+            if self.bidirection:
+                encoder_cell_bw = self.build_encoder_cell(self.hidden_size, self.cell_type, self.layer_size)
+                (
+                    (encoder_fw_outputs, encoder_bw_outputs),
+                    (encoder_fw_state, encoder_bw_state)
+                ) = tf.nn.bidirectional_dynamic_rnn(
+                    cell_bw=encoder_cell_bw,
+                    cell_fw=encoder_cell,
+                    inputs=encoder_inputs_embedded,
+                    sequence_length=self.encoder_inputs_length,
+                    dtype=tf.float32,
+                    swap_memory=True)
+
+                encoder_outputs = tf.concat(
+                    (encoder_bw_outputs, encoder_fw_outputs), 2)
+                encoder_final_state = []
+                for i in range(self.layer_size):
+                    c_fw, h_fw = encoder_fw_state[i]
+                    c_bw, h_bw = encoder_bw_state[i]
+                    c = tf.concat((c_fw, c_bw), axis=-1)
+                    h = tf.concat((h_fw, h_bw), axis=-1)
+                    encoder_final_state.append(LSTMStateTuple(c = c, h = h))
+                encoder_final_state = tuple(encoder_final_state)
+            else:
+                encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(
+                    cell=encoder_cell,
+                    inputs=encoder_inputs_embedded,
+                    sequence_length=self.encoder_inputs_length,
+                    dtype=tf.float32,
+                    initial_state=initial_state,
+                    swap_memory=True)
             return encoder_outputs, encoder_final_state
 
     def build_decoder_cell(self, encoder_outputs, encoder_final_state,
@@ -131,9 +156,10 @@ class Seq2Seq(object):
         :param layer_size:
         :return:
         """
-
-        cell = MultiRNNCell([self.one_cell(hidden_size, cell_type) for _ in range(layer_size)])
-
+        if self.bidirection:
+            cell = MultiRNNCell([self.one_cell(hidden_size * 2, cell_type) for _ in range(layer_size)])
+        else:
+            cell = MultiRNNCell([self.one_cell(hidden_size, cell_type) for _ in range(layer_size)])
         # 使用attention机制
         self.attention_mechanism = BahdanauAttention(
             num_units=self.hidden_size,

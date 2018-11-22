@@ -13,7 +13,7 @@ def predict():
     with open('model_config.json', 'r', encoding='utf-8') as fr:
         model_config = json.load(fr)
     du = data_unit.DataUnit(**data_config)
-    save_path = os.path.join(BASE_MODEL_DIR, 'chatbot_model.ckpt')
+    save_path = os.path.join(BASE_MODEL_DIR, 'chatbot_model2.ckpt')
     batch_size = 1
     tf.reset_default_graph()
     model = Seq2Seq(batch_size=batch_size,
@@ -46,8 +46,8 @@ def predict():
                 sess, np.array(x),
                 np.array(xl)
             )
-            print('Question:   ', du.transform_indexs(x[0]))
-            print('Predict Answer:   ', du.transform_indexs(pred[0]))
+            print('Q:   ', du.transform_indexs(x[0]))
+            print('A:   ', du.transform_indexs(pred[0]))
             print('-----------------------------')
 
 if __name__ == '__main__':

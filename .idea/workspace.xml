@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="965aa315-0eb1-4f55-b6f3-7711d64b04b9" name="Default Changelist" comment="" />
+    <list default="true" id="965aa315-0eb1-4f55-b6f3-7711d64b04b9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/chatbot_model.ckpt.data-00000-of-00001" beforeDir="false" afterPath="$PROJECT_DIR$/model/chatbot_model.ckpt.data-00000-of-00001" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/chatbot_model.ckpt.index" beforeDir="false" afterPath="$PROJECT_DIR$/model/chatbot_model.ckpt.index" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/checkpoint" beforeDir="false" afterPath="$PROJECT_DIR$/model/checkpoint" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/model_config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/predict.py" beforeDir="false" afterPath="$PROJECT_DIR$/predict.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/seq2seq.py" beforeDir="false" afterPath="$PROJECT_DIR$/seq2seq.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/train.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,19 +20,19 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/XHJ$test_corups.coverage" NAME="test_corups Coverage Results" MODIFIED="1542811798405" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/XHJ$data_unit.coverage" NAME="data_unit Coverage Results" MODIFIED="1542716040827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/XHJ$predict.coverage" NAME="predict Coverage Results" MODIFIED="1542813161750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/XHJ$train.coverage" NAME="train Coverage Results" MODIFIED="1542808953785" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/XHJ$predict.coverage" NAME="predict Coverage Results" MODIFIED="1542882538124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/XHJ$train.coverage" NAME="train Coverage Results" MODIFIED="1542882917002" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-902843312">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="4" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.1" value="1" />
-          <entry key="project.open.time.16" value="1" />
+          <entry key="project.open.time.16" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.opened" value="4" />
+          <entry key="project.opened" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -43,14 +52,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="json" value="146" />
-          <entry key="py" value="6535" />
+          <entry key="json" value="170" />
+          <entry key="py" value="6768" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JSON" value="146" />
-          <entry key="Python" value="6535" />
+          <entry key="JSON" value="170" />
+          <entry key="Python" value="6768" />
         </counts>
       </usages-collector>
     </session>
@@ -60,7 +69,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data_unit.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
+            <state relative-caret-position="6180">
               <caret line="214" column="4" selection-start-line="214" selection-start-column="4" selection-end-line="215" selection-end-column="30" />
               <folding>
                 <element signature="e#34#59#0" expanded="true" />
@@ -79,27 +88,27 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/seq2seq.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1934">
-              <caret line="265" column="65" selection-start-line="265" selection-start-column="65" selection-end-line="265" selection-end-column="65" />
+            <state relative-caret-position="7110">
+              <caret line="242" column="101" selection-start-line="242" selection-start-column="101" selection-end-line="242" selection-end-column="101" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
-                <marker date="1542802791496" expanded="true" signature="1410:1754" ph="..." />
-                <marker date="1542802791496" expanded="true" signature="1781:2622" ph="..." />
-                <marker date="1542802791496" expanded="true" signature="10843:11641" ph="..." />
-                <marker date="1542802791496" expanded="true" signature="12287:12574" ph="..." />
+                <marker date="1542864691409" expanded="true" signature="1477:1821" ph="..." />
+                <marker date="1542864691409" expanded="true" signature="1848:2689" ph="..." />
+                <marker date="1542864691409" expanded="true" signature="12279:13077" ph="..." />
+                <marker date="1542864691409" expanded="true" signature="13723:14010" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/predict.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="514">
-              <caret line="51" selection-start-line="51" selection-end-line="51" />
+            <state relative-caret-position="423">
+              <caret line="49" column="21" selection-start-line="49" selection-start-column="21" selection-end-line="49" selection-end-column="21" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
-                <marker date="1542804654460" expanded="true" signature="482:483" ph="..." />
+                <marker date="1542882912176" expanded="true" signature="483:484" ph="..." />
               </folding>
             </state>
           </provider>
@@ -108,7 +117,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_corups.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
+            <state relative-caret-position="300">
               <caret line="13" column="63" selection-start-line="13" selection-start-column="63" selection-end-line="13" selection-end-column="63" />
               <folding>
                 <element signature="e#20#50#0" expanded="true" />
@@ -120,20 +129,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-340350">
+            <state relative-caret-position="7761150">
               <caret line="258705" column="2" selection-start-line="258705" selection-start-column="2" selection-end-line="258705" selection-end-column="2" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="311">
+            <state relative-caret-position="363">
               <caret line="48" column="69" selection-start-line="48" selection-start-column="69" selection-end-line="48" selection-end-column="69" />
               <folding>
                 <element signature="e#13#24#0" expanded="true" />
-                <marker date="1542813121739" expanded="true" signature="210:211" ph="..." />
+                <marker date="1542882522119" expanded="true" signature="210:211" ph="..." />
               </folding>
             </state>
           </provider>
@@ -142,7 +151,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://C:/ProgramData/Anaconda3/envs/tfgpu/Lib/codecs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="9690">
               <caret line="323" selection-start-line="323" selection-end-line="323" />
             </state>
           </provider>
@@ -196,18 +205,22 @@
       <find>decoder_inputs_train</find>
       <find>self.decoder_inputs</find>
       <find>decoder_pred_decode</find>
+      <find>LSTMStateTuple</find>
     </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/config.json" />
-        <option value="$PROJECT_DIR$/seq2seq.py" />
         <option value="$PROJECT_DIR$/data_unit.py" />
-        <option value="$PROJECT_DIR$/predict.py" />
-        <option value="$PROJECT_DIR$/model_config.json" />
         <option value="$PROJECT_DIR$/test_corups.py" />
+        <option value="$PROJECT_DIR$/seq2seq.py" />
+        <option value="$PROJECT_DIR$/model_config.json" />
         <option value="$PROJECT_DIR$/train.py" />
+        <option value="$PROJECT_DIR$/predict.py" />
       </list>
     </option>
   </component>
@@ -218,16 +231,18 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1284" />
-    <option name="y" value="194" />
+    <option name="x" value="1036" />
+    <option name="y" value="161" />
     <option name="width" value="820" />
     <option name="height" value="620" />
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -239,7 +254,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -265,7 +279,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.predict">
+  <component name="RunManager" selected="Python.train">
     <configuration name="data_unit" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="XHJ" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -362,9 +376,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.train" />
         <item itemvalue="Python.predict" />
         <item itemvalue="Python.test_corups" />
-        <item itemvalue="Python.train" />
         <item itemvalue="Python.data_unit" />
       </list>
     </recent_temporary>
@@ -395,12 +409,12 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14392324" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14712153" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329718" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4208243" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.42128122" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -432,13 +446,7 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/config.json" />
     <entry file="file://$PROJECT_DIR$/xiaohuangji50w_fenciA.conv">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state relative-caret-position="141">
@@ -467,72 +475,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/ProgramData/Anaconda3/envs/tfgpu/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="323" selection-start-line="323" selection-end-line="323" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data_config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="5" column="31" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/seq2seq.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1934">
-          <caret line="265" column="65" selection-start-line="265" selection-start-column="65" selection-end-line="265" selection-end-column="65" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <marker date="1542802791496" expanded="true" signature="1410:1754" ph="..." />
-            <marker date="1542802791496" expanded="true" signature="1781:2622" ph="..." />
-            <marker date="1542802791496" expanded="true" signature="10843:11641" ph="..." />
-            <marker date="1542802791496" expanded="true" signature="12287:12574" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-340350">
-          <caret line="258705" column="2" selection-start-line="258705" selection-start-column="2" selection-end-line="258705" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/predict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="514">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
-          <folding>
-            <element signature="e#0#11#0" expanded="true" />
-            <marker date="1542804654460" expanded="true" signature="482:483" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_corups.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="13" column="63" selection-start-line="13" selection-start-column="63" selection-end-line="13" selection-end-column="63" />
-          <folding>
-            <element signature="e#20#50#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model_config.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data_unit.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
+        <state relative-caret-position="6180">
           <caret line="214" column="4" selection-start-line="214" selection-start-column="4" selection-end-line="215" selection-end-column="30" />
           <folding>
             <element signature="e#34#59#0" expanded="true" />
@@ -547,13 +492,76 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/seq2seq.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7110">
+          <caret line="242" column="101" selection-start-line="242" selection-start-column="101" selection-end-line="242" selection-end-column="101" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+            <marker date="1542864691409" expanded="true" signature="1477:1821" ph="..." />
+            <marker date="1542864691409" expanded="true" signature="1848:2689" ph="..." />
+            <marker date="1542864691409" expanded="true" signature="12279:13077" ph="..." />
+            <marker date="1542864691409" expanded="true" signature="13723:14010" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_corups.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="13" column="63" selection-start-line="13" selection-start-column="63" selection-end-line="13" selection-end-column="63" />
+          <folding>
+            <element signature="e#20#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7761150">
+          <caret line="258705" column="2" selection-start-line="258705" selection-start-column="2" selection-end-line="258705" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/ProgramData/Anaconda3/envs/tfgpu/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9690">
+          <caret line="323" selection-start-line="323" selection-end-line="323" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data_config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="5" column="31" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model_config.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
+        <state relative-caret-position="363">
           <caret line="48" column="69" selection-start-line="48" selection-start-column="69" selection-end-line="48" selection-end-column="69" />
           <folding>
             <element signature="e#13#24#0" expanded="true" />
-            <marker date="1542813121739" expanded="true" signature="210:211" ph="..." />
+            <marker date="1542882522119" expanded="true" signature="210:211" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/predict.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="423">
+          <caret line="49" column="21" selection-start-line="49" selection-start-column="21" selection-end-line="49" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+            <marker date="1542882912176" expanded="true" signature="483:484" ph="..." />
           </folding>
         </state>
       </provider>

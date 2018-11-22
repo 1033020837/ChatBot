@@ -18,7 +18,7 @@ def train():
     with open('model_config.json', 'r', encoding='utf-8') as fr:
         model_config = json.load(fr)
     du = data_unit.DataUnit(**data_config)
-    save_path = os.path.join(BASE_MODEL_DIR, 'chatbot_model.ckpt')
+    save_path = os.path.join(BASE_MODEL_DIR, 'chatbot_model2.ckpt')
     # 训练
     n_epoch = 500
     batch_size = 128
@@ -46,7 +46,7 @@ def train():
                     y = y[ : , 0:max_len]
                     cost, lr = model.train(sess, x, xl, y, yl)
                     costs.append(cost)
-                    bar.set_description('epoch {} loss={:.6f} lr={:.5f}'.format(epoch, np.mean(costs), lr))
+                    bar.set_description('epoch {} loss={:.6f} lr={:.6f}'.format(epoch, np.mean(costs), lr))
                 model.save(sess, save_path=save_path)
 
 if __name__ == '__main__':
