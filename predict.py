@@ -1,19 +1,23 @@
-import json
+"""
+    对训练好的模型进行测试
+    运行此文件开始与机器人聊天
+    注意只能进行中文聊天
+"""
+
 import data_unit
 import os
 import tensorflow as tf
 from seq2seq import Seq2Seq
 import numpy as np
-
-BASE_MODEL_DIR = 'model'
+from config import BASE_MODEL_DIR, MODEL_NAME, data_config, model_config
 
 def predict():
-    with open('data_config.json', 'r', encoding='utf-8') as fr:
-        data_config = json.load(fr)
-    with open('model_config.json', 'r', encoding='utf-8') as fr:
-        model_config = json.load(fr)
+    """
+    针对用户输入的聊天内容给出回复
+    :return:
+    """
     du = data_unit.DataUnit(**data_config)
-    save_path = os.path.join(BASE_MODEL_DIR, 'chatbot_model2.ckpt')
+    save_path = os.path.join(BASE_MODEL_DIR, MODEL_NAME)
     batch_size = 1
     tf.reset_default_graph()
     model = Seq2Seq(batch_size=batch_size,
@@ -25,20 +29,15 @@ def predict():
         init = tf.global_variables_initializer()
         sess.run(init)
         model.load(sess, save_path)
-        '''
-        for _ in range(10):
-            x, xl, y, yl = du.next_batch(batch_size)
-            pred = model.predict(
-                sess, np.array(x),
-                np.array(xl)
-            )
-            print('Question:   ',du.transform_indexs(x[0]))
-            print('Real Answer:   ',du.transform_indexs(y[0]))
-            print('Predict Answer:   ',du.transform_indexs(pred[0]))
-            print('-----------------------------')
-        '''
         while True:
-            q = input('请输入：')
+            q = input('请输入聊天内容：')
+            if q is None or q.strip() == '':
+                print('-----------------------------')
+                continue
+            if q == r'\b':
+                print('再见！')
+                exit()
+            q = q.strip()
             indexs = du.transform_sentence(q)
             x = np.asarray(indexs).reshape((1,-1))
             xl = np.asarray(len(indexs)).reshape((1,))

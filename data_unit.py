@@ -1,13 +1,12 @@
 """
+    数据处理单元
     处理原始语料数据
     生成批训练数据
 """
 
-from pprint import pprint
 import re
 import os
 import pickle
-import json
 import collections
 import itertools
 import random
@@ -15,12 +14,13 @@ import numpy as np
 
 class DataUnit(object):
 
-    #特殊标签
+    # 特殊标签
     PAD = '<PAD>'
     UNK = '<UNK>'
     START = '<SOS>'
     END = '<EOS>'
 
+    # 特殊标签的索引
     START_INDEX = 0
     END_INDEX =1
     UNK_INDEX = 2
@@ -29,13 +29,13 @@ class DataUnit(object):
     def __init__(self, path, processed_path,
                  min_q_len, max_q_len,
                  min_a_len, max_a_len,
-                 index2word_path, word2index_path):
+                 word2index_path):
         """
-        :param path:原始语料库路径
+            初始化函数，参数意义可查看config.py文件中的注释
+        :param
         """
         self.path = path
-        self.processed_path = processed_path    #处理过后的语料的存储路径
-        self.index2word_path = index2word_path
+        self.processed_path = processed_path
         self.word2index_path = word2index_path
         self.min_q_len = min_q_len
         self.max_q_len = max_q_len
@@ -48,16 +48,24 @@ class DataUnit(object):
         self._fit_data_()
 
     def next_batch(self, batch_size):
+        """
+        生成一批训练数据
+        :param batch_size: 每一批数据的样本数
+        :return: 经过了填充处理的QA对
+        """
         data_batch = random.sample(self.data, batch_size)
         batch = []
         for qa in data_batch:
             encoded_q = self.transform_sentence(qa[0])
             encoded_a = self.transform_sentence(qa[1])
             q_len = len(encoded_q)
+
+            # 填充句子
             encoded_q = encoded_q + [self.func_word2index(self.PAD)] * (self.max_q_len - q_len)
             encoded_a = encoded_a + [self.func_word2index(self.END)]
             a_len = len(encoded_a)
             encoded_a = encoded_a + [self.func_word2index(self.PAD)] * (self.max_a_len + 1 - a_len)
+
             batch.append((encoded_q, q_len, encoded_a, a_len))
         batch = zip(*batch)
         batch = [np.asarray(x) for x in batch]
@@ -76,8 +84,8 @@ class DataUnit(object):
 
     def transform_indexs(self, indexs):
         """
-        将索引转化为句子,去除标签
-        :param indexs:
+        将索引转化为句子,同时去除填充的标签
+        :param indexs:索引序列
         :return:
         """
         res = []
@@ -90,27 +98,24 @@ class DataUnit(object):
 
     def _fit_data_(self):
         """
-        将语料库与词表对应
+        得到处理后语料库的所有词，并将其编码为索引值
         :return:
         """
-        if not os.path.exists(self.index2word_path) or not os.path.exists(self.word2index_path):
+        if not os.path.exists(self.word2index_path):
             vocabularies = [x[0] + x[1] for x in self.data]
             self._fit_word_(itertools.chain(*vocabularies))
-            with open(self.index2word_path, 'wb') as fw:
-                pickle.dump(self.index2word, fw)
             with open(self.word2index_path, 'wb') as fw:
                 pickle.dump(self.word2index, fw)
         else:
-            with open(self.index2word_path, 'rb') as fr:
-                self.index2word = pickle.load(fr)
             with open(self.word2index_path, 'rb') as fr:
                 self.word2index = pickle.load(fr)
+            self.index2word = dict([(v,k) for k,v in self.word2index.items()])
         self.vocab_size = len(self.word2index)
 
 
     def load_data(self):
         """
-        获取处理后的语料
+        获取处理后的语料库
         :return:
         """
         if not os.path.exists(self.processed_path):
@@ -124,15 +129,25 @@ class DataUnit(object):
         return data
 
     def func_word2index(self, word):
+        """
+        将词转化为索引
+        :param word:
+        :return:
+        """
         return self.word2index.get(word, self.word2index[self.UNK])
 
     def func_index2word(self, index):
+        """
+        将索引转化为词
+        :param index:
+        :return:
+        """
         return self.index2word.get(index, self.UNK)
 
     def _fit_word_(self, vocabularies):
         """
-        获取词语索引的对应
-        :param vocabularies:
+        将词表中所有的词转化为索引，过滤掉出现次数少于4次的词
+        :param vocabularies:词表
         :return:
         """
         vocab_counter = collections.Counter(vocabularies)
@@ -140,10 +155,9 @@ class DataUnit(object):
         self.word2index = dict([(w, i) for i, w in enumerate(index2word)])
         self.index2word =dict([(i, w) for i, w in enumerate(index2word)])
 
-
     def _regular_(self, sen):
         """
-        句子规范化
+        句子规范化，主要是对原始语料的句子进行一些标点符号的统一
         :param sen:
         :return:
         """
@@ -172,7 +186,7 @@ class DataUnit(object):
 
     def _good_line_(self, line):
         """
-        判断一句话是否是好的语料,暂定中文占80%以上为好的
+        判断一句话是否是好的语料
         :param line:
         :return:
         """
@@ -190,7 +204,7 @@ class DataUnit(object):
 
     def _extract_data(self):
         """
-        从conv文件中读取问答对
+        从原始语料库中读取问答对
         :return:
         """
         res = []
@@ -209,11 +223,9 @@ class DataUnit(object):
         return res
 
     def __len__(self):
+        """
+        返回处理后的语料库中问答对的数量
+        :return:
+        """
         return len(self.data)
-
-if __name__ == '__main__':
-    with open('data_config.json', 'r', encoding='utf-8') as fr:
-        config = json.load(fr)
-    du = DataUnit(**config)
-    print(len(du.data))
 

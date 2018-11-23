@@ -1,9 +1,15 @@
+"""
+    Sequence To Sequence模型
+    定义了模型编码器、解码器、优化器、训练、预测
+"""
+
 import tensorflow as tf
-from tensorflow.contrib.rnn import LSTMCell, GRUCell, MultiRNNCell, LSTMStateTuple
-from tensorflow.contrib.seq2seq import BahdanauAttention, AttentionWrapper,TrainingHelper,GreedyEmbeddingHelper,\
-        BasicDecoder
+from tensorflow.contrib.rnn import LSTMCell, GRUCell, MultiRNNCell, LSTMStateTuple, DropoutWrapper, ResidualWrapper
+from tensorflow.contrib.seq2seq import BahdanauAttention, AttentionWrapper,TrainingHelper,\
+        BasicDecoder, BeamSearchDecoder
 from tensorflow import layers
 from data_unit import DataUnit
+from tensorflow.python.ops import array_ops
 
 class Seq2Seq(object):
 
@@ -14,8 +20,12 @@ class Seq2Seq(object):
                  max_decode_step,max_gradient_norm,
                  learning_rate,decay_step,
                  min_learning_rate,bidirection,
+                 beam_width,
                  mode
                  ):
+        """
+        初始化函数，参数意义可查看config.py中对应的注释
+        """
         self.hidden_size = hidden_size
         self.cell_type = cell_type
         self.layer_size = layer_size
@@ -30,13 +40,14 @@ class Seq2Seq(object):
         self.decay_step = decay_step
         self.min_learning_rate = min_learning_rate
         self.bidirection = bidirection
+        self.beam_width = beam_width
         self.mode = mode
         self.global_step = tf.Variable(0, trainable=False, name='global_step')
         self.build_model()
 
     def build_model(self):
         """
-        构建模型
+        构建完整的模型
         :return:
         """
         self.init_placeholder()
@@ -54,6 +65,7 @@ class Seq2Seq(object):
         """
         self.encoder_inputs = tf.placeholder(tf.int32, shape=[self.batch_size,None], name='encoder_inputs')
         self.encoder_inputs_length = tf.placeholder(tf.int32, shape=[self.batch_size,], name='encoder_inputs_length')
+        self.keep_prob = tf.placeholder(tf.float32, shape=(), name='keep_prob')
         if self.mode == 'train':
             self.decoder_inputs = tf.placeholder(tf.int32, shape=[self.batch_size,None], name='decoder_inputs')
             self.decoder_inputs_length = tf.placeholder(tf.int32, shape=[self.batch_size, ],
@@ -89,6 +101,12 @@ class Seq2Seq(object):
         else:
             c = LSTMCell
         cell = c(hidden_size)
+        cell = DropoutWrapper(
+            cell,
+            dtype=tf.float32,
+            output_keep_prob=self.keep_prob,
+        )
+        cell = ResidualWrapper(cell)
         return cell
 
     def build_encoder_cell(self, hidden_size, cell_type, layer_size):
@@ -111,6 +129,10 @@ class Seq2Seq(object):
         with tf.variable_scope('encoder'):
             encoder_cell = self.build_encoder_cell(self.hidden_size, self.cell_type, self.layer_size)
             encoder_inputs_embedded = tf.nn.embedding_lookup(self.encoder_embeddings, self.encoder_inputs)
+            encoder_inputs_embedded = layers.dense(encoder_inputs_embedded,
+                                                        self.hidden_size,
+                                                        use_bias=False,
+                                                        name='encoder_residual_projection')
             initial_state = encoder_cell.zero_state(self.batch_size, dtype=tf.float32)
             if self.bidirection:
                 encoder_cell_bw = self.build_encoder_cell(self.hidden_size, self.cell_type, self.layer_size)
@@ -143,6 +165,7 @@ class Seq2Seq(object):
                     dtype=tf.float32,
                     initial_state=initial_state,
                     swap_memory=True)
+
             return encoder_outputs, encoder_final_state
 
     def build_decoder_cell(self, encoder_outputs, encoder_final_state,
@@ -156,6 +179,15 @@ class Seq2Seq(object):
         :param layer_size:
         :return:
         """
+        sequence_length = self.encoder_inputs_length
+        if self.mode == 'decode':
+            encoder_outputs = tf.contrib.seq2seq.tile_batch(
+                encoder_outputs, multiplier=self.beam_width)
+            encoder_final_state = tf.contrib.seq2seq.tile_batch(
+                encoder_final_state, multiplier=self.beam_width)
+            sequence_length = tf.contrib.seq2seq.tile_batch(
+                sequence_length, multiplier=self.beam_width)
+
         if self.bidirection:
             cell = MultiRNNCell([self.one_cell(hidden_size * 2, cell_type) for _ in range(layer_size)])
         else:
@@ -164,23 +196,34 @@ class Seq2Seq(object):
         self.attention_mechanism = BahdanauAttention(
             num_units=self.hidden_size,
             memory=encoder_outputs,
-            memory_sequence_length=self.encoder_inputs_length
+            memory_sequence_length=sequence_length
         )
+        def cell_input_fn(inputs, attention):
+            mul = 2 if self.bidirection else 1
+            attn_projection = layers.Dense(self.hidden_size * mul,
+                                           dtype=tf.float32,
+                                           use_bias=False,
+                                           name='attention_cell_input_fn')
+            return attn_projection(array_ops.concat([inputs, attention], -1))
         cell = AttentionWrapper(
             cell=cell,
             attention_mechanism=self.attention_mechanism,
             attention_layer_size=self.hidden_size,
+            cell_input_fn=cell_input_fn,
             name='Attention_Wrapper'
         )
-        decoder_initial_state = cell.zero_state(batch_size=self.batch_size, dtype=tf.float32).clone(
-            cell_state=encoder_final_state)
+        if self.mode == 'decode':
+            decoder_initial_state = cell.zero_state(batch_size=self.batch_size * self.beam_width, dtype=tf.float32).clone(
+                cell_state=encoder_final_state)
+        else:
+            decoder_initial_state = cell.zero_state(batch_size=self.batch_size,
+                                                    dtype=tf.float32).clone(
+                cell_state=encoder_final_state)
         return cell, decoder_initial_state
 
     def build_decoder(self, encoder_outputs, encoder_final_state):
         """
         构建完整解码器
-        :param encoder_outputs:
-        :param encoder_final_state:
         :return:
         """
         with tf.variable_scope("decode"):
@@ -216,24 +259,27 @@ class Seq2Seq(object):
                 # 预测模式
                 start_token = [DataUnit.START_INDEX] * self.batch_size
                 end_token = DataUnit.END_INDEX
-                decoder_helper = GreedyEmbeddingHelper(start_tokens=start_token,
-                                                                          end_token=end_token,
-                                                                          embedding=lambda x : tf.nn.embedding_lookup(self.decoder_embeddings, x))
-                inference_decoder = BasicDecoder(decoder_cell, decoder_helper, decoder_initial_state, decoder_output_projection)
+                inference_decoder = BeamSearchDecoder(
+                        cell=decoder_cell,
+                        embedding=lambda x : tf.nn.embedding_lookup(self.decoder_embeddings, x),
+                        start_tokens=start_token,
+                        end_token=end_token,
+                        initial_state=decoder_initial_state,
+                        beam_width=self.beam_width,
+                        output_layer=decoder_output_projection
+                    )
                 inference_decoder_output, _, _ = tf.contrib.seq2seq.dynamic_decode(inference_decoder,
                                                                                   maximum_iterations=self.max_decode_step)
-                self.decoder_pred_decode = inference_decoder_output.sample_id
+                self.decoder_pred_decode = inference_decoder_output.predicted_ids
+                self.decoder_pred_decode = tf.transpose(
+                    self.decoder_pred_decode,
+                    perm=[0, 2, 1]
+                )
 
     def check_feeds(self, encoder_inputs, encoder_inputs_length,
-                    decoder_inputs, decoder_inputs_length, decode):
+                    decoder_inputs, decoder_inputs_length, keep_prob, decode):
         """
-        检查输入,返回输入字典
-        :param encoder_inputs: 一个整型的二维矩阵，[batch_size, max_source_time_steps]
-        :param encoder_inputs_length: [batch_size], 每一个维度是encoder句子的真实长度
-        :param decoder_inputs: 一个整型的二维矩阵，[batch_size, max_target_time_steps]
-        :param decoder_inputs_length: [batch_size], 每一个维度是decoder句子的真实长度
-        :param decode: 是训练模式train(decode=False), 还是预测模式decode(decode=True)
-        :return: TensorFlow所需的input_feed
+            检查输入,返回输入字典
         """
         input_batch_size = encoder_inputs.shape[0]
         assert input_batch_size == encoder_inputs_length.shape[0],'encoder_inputs 和 encoder_inputs_length的第一个维度必须一致'
@@ -243,6 +289,7 @@ class Seq2Seq(object):
             assert target_batch_size == decoder_inputs_length.shape[0],'decoder_inputs 和 decoder_inputs_length的第一个维度必须一致'
         input_feed = {self.encoder_inputs.name: encoder_inputs,
                       self.encoder_inputs_length.name: encoder_inputs_length}
+        input_feed[self.keep_prob.name] = keep_prob
         if not decode:
             input_feed[self.decoder_inputs.name] = decoder_inputs
             input_feed[self.decoder_inputs_length.name] = decoder_inputs_length
@@ -273,14 +320,14 @@ class Seq2Seq(object):
         )
 
     def train(self, sess, encoder_inputs, encoder_inputs_length,
-              decoder_inputs, decoder_inputs_length):
+              decoder_inputs, decoder_inputs_length, keep_prob):
         """
         训练模型
         :param sess:
         :return:
         """
         input_feed = self.check_feeds(encoder_inputs, encoder_inputs_length,
-                                      decoder_inputs, decoder_inputs_length,
+                                      decoder_inputs, decoder_inputs_length,keep_prob,
                                       False)
         output_feed = [
             self.update, self.loss,
@@ -294,11 +341,10 @@ class Seq2Seq(object):
         预测
         :return:
         """
-        # 输入
         input_feed = self.check_feeds(encoder_inputs, encoder_inputs_length,
-                                      None, None, True)
+                                      None, None, 1, True)
         pred = sess.run(self.decoder_pred_decode, input_feed)
-        return pred
+        return pred[0]
 
 
     def save(self, sess, save_path='model.ckpt'):
@@ -311,11 +357,7 @@ class Seq2Seq(object):
     def load(self, sess, save_path='model/chatbot_model.ckpt'):
         """
         加载模型
-        :param sess:
-        :param save_path:
-        :return:
         """
-        print('try load model from ', save_path)
         self.saver.restore(sess, save_path)
 
 
